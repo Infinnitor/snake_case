@@ -1,0 +1,9 @@
+[package]
+name = "snake_case"
+version = "0.1.0"
+edition = "2021"
+description = "Commandline snake game"
+
+[dependencies]
+device_query = "0.2.8"
+rand = "0.8.0"
