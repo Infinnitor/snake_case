@@ -1,7 +1,7 @@
 use std::process::exit;
 use std::time::{Instant};
 
-use device_query::{DeviceQuery, DeviceState, Keycode}; // the goat
+use device_query::{Keycode};
 use super::display::{rgbc, RGB, surface};
 
 use super::escapes;
@@ -21,7 +21,6 @@ pub struct player {
 	xvel: i32,
 	yvel: i32,
 
-	keyboard: DeviceState,
 	snakebits: Vec<snakebit>,
 	yummle: yummy_thing,
 
@@ -37,8 +36,6 @@ impl player {
 			length: PLAYER_START_LENGTH,
 
 			xvel: 1, yvel: 0,
-
-			keyboard: DeviceState::new(),
 
 			snakebits: vec![],
 			yummle: yummy_thing::rand(), // Default start at 0, 0
@@ -90,21 +87,7 @@ impl player {
 		return false;
 	}
 
-	// Getters
-	// pub fn getx(&self) -> i32 { self.x }
-	//
-	// pub fn gety(&self) -> i32 { self.y }
-	//
-	// pub fn length(&self) -> i32 { self.length }
-
-	pub fn update(&mut self, main_window: &mut surface, frames: &u64) {
-		if WIDTH == 0 || HEIGHT == 0 {
-			escapes::clear_console();
-			panic!("Player is offscreen");
-		} // Remove from production
-
-		let keylist: Vec<Keycode> = self.keyboard.get_keys();
-
+	pub fn update(&mut self, main_window: &mut surface, keylist: &mut Vec<Keycode>, frames: &u64) {
 		// Cannot use match in a for loop because match doesn't recognise Keycode
 		if (keylist.contains(&Keycode::A) || keylist.contains(&Keycode::Left)) && self.xvel != 1 {
 			self.setvel(-1, 0);
@@ -126,11 +109,7 @@ impl player {
 			super::escapes::clear_console();
 		}
 
-		drop(keylist);
-
 		self.x += self.xvel;
-
-		// Move vertically at a different rate
 		self.y += self.yvel;
 
 		main_window.set(self.x, self.y, RGB(155, 35, 35));
@@ -204,7 +183,6 @@ impl snakebit {
 		}
 
 		main_window.set(self.x, self.y, RGB(155, 35, 35));
-		// main_window.set(self.x+1, self.y, RGB(155, 35, 35));
 	}
 }
 
@@ -232,7 +210,6 @@ impl yummy_thing {
 
 	pub fn update(&self, main_window: &mut surface) {
 		main_window.set(self.x, self.y, RGB(35, 155, 35));
-		// main_window.set(self.x+1, self.y, RGB(35, 155, 35));
 	}
 }
 

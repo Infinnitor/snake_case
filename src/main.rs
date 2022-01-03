@@ -1,5 +1,6 @@
 use std::thread::sleep;
 use std::time::{Duration};
+use device_query::{DeviceQuery, DeviceState, Keycode}; // the goat
 
 #[allow(dead_code, non_camel_case_types)]
 mod gameobjects;
@@ -14,8 +15,8 @@ use display::{rgbc, RGB, surface};
 mod util;
 
 mod config;
-use config::{WIDTH, HEIGHT, FRAME_WAIT_MILLIS};
-pub const DESIRED_FRAMERATE: Duration = Duration::from_millis(FRAME_WAIT_MILLIS);
+use config::{WIDTH, HEIGHT, FRAME_WAIT_MILLIS, KEYBOARD_UPDATES_PER_FRAME};
+pub const TICK_TIME: Duration = Duration::from_millis((FRAME_WAIT_MILLIS / KEYBOARD_UPDATES_PER_FRAME) as u64);
 
 
 fn main() {
@@ -29,19 +30,25 @@ fn mainloop() {
 	let mut player_inst: gameobjects::player = gameobjects::player::new(5, 10);
 	let mut main_window: surface = display::surface::new(WIDTH, HEIGHT);
 
+	let keyboard = DeviceState::new();
+	let mut keylist: Vec<Keycode> = vec![];
+
 	escapes::clear_console();
 
 	let mut frames: u64 = 0;
 	loop {
 		main_window.fill(BACKGROUND);
 
-		player_inst.update(&mut main_window, &frames);
+		player_inst.update(&mut main_window, &mut keylist, &frames);
 		gameobjects::draw_border(&mut main_window);
 
 		main_window.flip();
 		print!("{}", escapes::cursorup(&HEIGHT));
 
 		frames += 1;
-		sleep(DESIRED_FRAMERATE);
+		for x in 0..KEYBOARD_UPDATES_PER_FRAME {
+			keylist = keyboard.get_keys();
+			sleep(TICK_TIME);
+		}
 	}
 }

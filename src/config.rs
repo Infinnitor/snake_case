@@ -3,7 +3,8 @@ use std::env::args;
 pub const WIDTH: i32 = 35;
 pub const HEIGHT: i32 = 20;
 
-pub const FRAME_WAIT_MILLIS: u64 = 85;
+pub const FRAME_WAIT_MILLIS: u32 = 85;
+pub const KEYBOARD_UPDATES_PER_FRAME: u32 = 5;
 
 pub const OS: &str = "UNIX";
 
