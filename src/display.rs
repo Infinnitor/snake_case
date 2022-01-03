@@ -1,5 +1,6 @@
 use super::escapes;
 use super::config;
+use std::process::exit;
 
 
 #[derive(Copy, Clone)]
@@ -15,17 +16,27 @@ impl rgbc {
 		String::from(format!("rgb({}, {}, {})", self.r, self.g, self.b))
 	}
 
+	fn check_colour_code_support() {
+		if !config::COLOUR_CODES_SUPPORTED {
+			println!("Your operating system doesn't support ANSI colour code escape sequences. Avoid using --colour or --greyscale options");
+			exit(0);
+		}
+	}
+
 	pub fn to_escape_sequence(&self) -> String {
-		if config::flagged(vec!["-C", "--colour", "--color"]) && config::OS == "UNIX" {
+		if config::flagged(vec!["-C", "--colour", "--color"]) {
+			rgbc::check_colour_code_support();
 			return escapes::single_block_rgb(self.r as u32, self.g as u32, self.b as u32);
 		}
 
-		else if config::flagged(vec!["-g", "--greyscale", "--grayscale"]) && config::OS == "UNIX" {
+		else if config::flagged(vec!["-g", "--greyscale", "--grayscale"]) {
+			rgbc::check_colour_code_support();
+
 			let g: u32 = (self.total() / 3) as u32;
 			return escapes::single_block_rgb(g, g, g);
 		}
 
-		// shit code, should've hardcoded colours
+		// shit code, should've just hardcoded colours
 		else {
 			if self.total() < 155 {
 				return String::from(" ");

@@ -20,11 +20,6 @@ pub const TICK_TIME: Duration = Duration::from_millis((FRAME_WAIT_MILLIS / KEYBO
 
 
 fn main() {
-	mainloop();
-}
-
-
-fn mainloop() {
 	let BACKGROUND: rgbc = RGB(10, 9, 13);
 
 	let mut player_inst: gameobjects::player = gameobjects::player::new(5, 10);
@@ -32,8 +27,6 @@ fn mainloop() {
 
 	let keyboard = DeviceState::new();
 	let mut keylist: Vec<Keycode> = vec![];
-
-	escapes::clear_console();
 
 	let mut frames: u64 = 0;
 	loop {
@@ -50,5 +43,6 @@ fn mainloop() {
 			keylist = keyboard.get_keys();
 			sleep(TICK_TIME);
 		}
+		escapes::clear_console();
 	}
 }
