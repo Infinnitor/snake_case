@@ -2,7 +2,7 @@ use super::config;
 
 
 pub fn cursorup(a: &i32) -> String {
-	if config::COLOUR_CODES_SUPPORTED {
+	if config::OS == "UNIX" {
 		String::from(format!("\x1b[{}A\x1b[0G", a.to_string()))
 	}
 
@@ -15,7 +15,7 @@ pub fn cursorup(a: &i32) -> String {
 
 
 pub fn clear_console() {
-	if config::COLOUR_CODES_SUPPORTED {
+	if config::OS == "UNIX" {
 		print!("\x1bc");
 	}
 

@@ -16,7 +16,7 @@ impl rgbc {
 		String::from(format!("rgb({}, {}, {})", self.r, self.g, self.b))
 	}
 
-	fn check_colour_code_support() {
+	pub fn check_colour_code_support() {
 		if !config::COLOUR_CODES_SUPPORTED {
 			println!("Your operating system doesn't support ANSI colour code escape sequences. Avoid using --colour or --greyscale options");
 			exit(0);

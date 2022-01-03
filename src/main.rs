@@ -22,11 +22,17 @@ pub const TICK_TIME: Duration = Duration::from_millis((FRAME_WAIT_MILLIS / KEYBO
 fn main() {
 	let BACKGROUND: rgbc = RGB(10, 9, 13);
 
+	if config::flagged(vec!["-C", "--colour", "--color", "-g", "--greyscale", "--grayscale"]) {
+		rgbc::check_colour_code_support();
+	}
+
 	let mut player_inst: gameobjects::player = gameobjects::player::new(5, 10);
 	let mut main_window: surface = display::surface::new(WIDTH, HEIGHT);
 
 	let keyboard = DeviceState::new();
 	let mut keylist: Vec<Keycode> = vec![];
+
+	escapes::clear_console();
 
 	let mut frames: u64 = 0;
 	loop {
@@ -43,6 +49,5 @@ fn main() {
 			keylist = keyboard.get_keys();
 			sleep(TICK_TIME);
 		}
-		escapes::clear_console();
 	}
 }
