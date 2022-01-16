@@ -7,7 +7,7 @@ pub const FRAME_WAIT_MILLIS: u32 = 85;
 pub const KEYBOARD_UPDATES_PER_FRAME: u32 = 5;
 
 pub const OS: &str = "UNIX";
-pub const COLOUR_CODES_SUPPORTED: bool = false;
+pub const COLOUR_CODES_SUPPORTED: bool = true;
 
 pub fn flagged(names: Vec<&str>) -> bool {
 	let argv: Vec<String> = args().collect();
